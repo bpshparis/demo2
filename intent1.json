@@ -1,0 +1,17 @@
+{
+  "intent": "aurevoir",
+  "examples": [
+    {
+      "text": "Au revoir"
+    },
+    {
+      "text": "Salut"
+    },
+    {
+      "text": "A plus"
+    },
+    {
+      "text": "Tchao"
+    }
+  ]
+}

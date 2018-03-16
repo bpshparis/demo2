@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/glyphicons.css"> -->
+
+</head>
+<body>
+<input type="file" accept=".wav" id="wavFile" name="wavFile">
+<script src="js/jquery.min.js"></script>
+<script>
+
+$("#wavFile").change(function(){
+    init();
+});
+
+function init(){
+
+  var fileInput = document.getElementById('wavFile');
+  var file = fileInput.files[0];
+  var fd = new FormData();
+  fd.append('file', file, 'sound.wav');
+
+  $.ajax({
+      url: "GetSound",
+      type: "POST",
+      data: fd,
+      enctype: 'multipart/form-data',
+      dataType: false,
+      processData: false,  // tell jQuery not to process the data
+      contentType: false,   // tell jQuery not to set contentType
+
+      success: function(data) {
+        console.log(data);
+  		},
+  		error: function(data) {
+        console.log(data);
+  		}
+  });
+}
+
+// window.addEventListener('load', init);
+
+</script>
+
+</body>
+</html>

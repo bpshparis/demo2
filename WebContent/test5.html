@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/glyphicons.css"> -->
+
+</head>
+<body>
+  <div id="controls">
+    <button type="button" id="btnStartRec">
+    <button type="button" id="btnStopRec">
+  </div>
+
+	   <script src="js/jquery.min.js"></script>
+    <script src="js/recorderjs/recorder.js"></script>
+  	<script src="js/test5.js"></script>
+
+  <!-- <script>
+
+    var node;
+    var rec;
+
+    if (!navigator.getUserMedia)
+        navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                      navigator.mozGetUserMedia || navigator.msGetUserMedia;
+
+    if (navigator.getUserMedia){
+      navigator.getUserMedia({audio:true}, success, function(e) {
+        alert('Error capturing audio.');
+      });
+    } else alert('getUserMedia not supported in this browser.');
+
+    function success(stream){
+      // // create the MediaStreamAudioSourceNode
+      //     var context = new AudioContext();
+      //     var source = context.createMediaStreamSource(stream);
+      //     var recLength = 0,
+      //       recBuffersL = [],
+      //       recBuffersR = [];
+      //
+      //     // create a ScriptProcessorNode
+      //    node = context.createScriptProcessor(4096, 2, 2);
+      //
+      //     // listen to the audio data, and record into the buffer
+      //     node.onaudioprocess = function(e){
+      //       console.log('start recording');
+      //       recBuffersL.push(e.inputBuffer.getChannelData(0));
+      //       recBuffersR.push(e.inputBuffer.getChannelData(1));
+      //       recLength += e.inputBuffer.getChannelData(0).length;
+      //     }
+      //
+      //     // connect the ScriptProcessorNode with the input audio
+      //     source.connect(node);
+      //     // if the ScriptProcessorNode is not connected to an output the "onaudioprocess" event is not triggered in chrome
+      //     node.connect(context.destination);
+    }
+
+    btnStartRec.addEventListener('click', function(event){
+      console.log('btnStartRec clicked');
+      var rec = new Recorder(node);
+      rec.record();
+      event.preventDefault();
+    }, false);
+
+    btnStopRec.addEventListener('click', function(event){
+      console.log('btnStopRec clicked');
+      rec.stop();
+      event.preventDefault();
+    }, false);
+
+  </script> -->
+
+</body>
+</html>

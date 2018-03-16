@@ -1,0 +1,9 @@
+{
+	"intent": "bonjour",
+	"examples": [
+		{"text": "Bonjour"},
+		{"text": "Salut"},
+		{"text": "Yo"},
+		{"text": "Kenavo"}
+	]
+}

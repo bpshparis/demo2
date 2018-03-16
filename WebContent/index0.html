@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Cache-control" content="no-cache">
+	<meta http-equiv="Expires" content="-1">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Test0</title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/bootstrap-table.css">
+	<link rel="stylesheet" href="css/bootstrap-editable.css">
+	<link rel="stylesheet" href="css/bootstrap-select.min.css">
+	<link rel="stylesheet" href="css/glyphicons.css">
+	<link rel="stylesheet" href="css/bootstrap-tagsinput.css">
+	<!-- <link rel="stylesheet" href="css/index.css"> -->
+
+</head>
+<body>
+
+	<div class="container-fluid" style="margin-top: 10px;">
+
+		<div class="toolbar form-inline" id="Toolbar">
+			<!-- <form id="fileinfo" name="fileinfo"> -->
+			<!-- </form> -->
+			<button type="button" onclick="startRec()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Get Mails."><span class="glyphicons glyphicons-microphone" aria-hidden="true"></span></button>
+			<button type="button" onclick="stopRec()" class="btn btn-default gibtn" data-toggle="tooltip" data-placement="top" title="Get Mails."><span class="glyphicons glyphicons-mic-mute" aria-hidden="true"></span></button>
+
+		</div>
+
+	</div> <!-- container -->
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/bootstrap-table.js"></script>
+	<script src="js/bootstrap-table-editable.js"></script>
+	<script src="js/bootstrap-editable.js"></script>
+	<script src="js/bootstrap-select.min.js"></script>
+	<script src="js/bootstrap-list-filter.min.js"></script>
+	<script src="js/bootstrap-tagsinput.js"></script>
+	<script src="js/bootbox.min.js"></script>
+	<script src="js/RecordRTC.js"></script>
+	<script src="js/recorderWorker.js"></script>
+	<script src="js/audioRecord.js"></script>
+	<script src="js/lame.all.js"></script>
+
+	<!-- <script src="js/index.js"></script> -->
+
+	<script>
+
+	var session = {
+	  audio: true,
+	  video: false
+	};
+
+	var recordRTC = null;
+	var fileType = 'audio/wav';
+
+	$(document)
+		.ready(function() {
+	})
+
+	function startRec(){
+		navigator.getUserMedia(session, function(mediaStream){
+		  recordRTC = new StereoAudioRecorder(mediaStream, {
+    		sampleRate: 44100,
+    		bufferSize: 4096
+			});
+		  recordRTC.record();
+			setTimeout(function(){     // Stop recording after 10 seconds
+
+				console.log("record timeout");
+				stopRec();
+
+			}, 5000);
+		}, function onError(err) {
+			console.log(err);
+		});
+	}
+
+	function stopRec(){
+		recordRTC.stop(function(){
+
+			var formData = new FormData();
+			formData.append(fileType, recordRTC.blob);
+			$.ajax({
+				type: 'POST',
+				url: 'GetSound',
+				data: formData,
+				contentType: false,
+				cache: false,
+				processData: false,
+				success: function(data){
+					console.log(data);
+				},
+				error: function(data){
+					console.log(data);
+				}
+		 });
+
+			// var audioData;
+			// var fileReader = new FileReader();
+			// fileReader.onload = function() {
+    	// 	audioData = this.result;
+			// 	var wav = lamejs.WavHeader.readHeader(new DataView(audioData));
+			// 	var samples = new Int16Array(audioData, wav.dataOffset, wav.dataLen / 2);
+			// 	console.log(samples);
+			// 	encode(wav.channels, wav.sampleRate, samples);
+			// };
+			// fileReader.readAsArrayBuffer(recordRTC.blob);
+
+	});
+}
+
+
+function encode(samples) {
+
+	mp3encoder = new lamejs.Mp3Encoder(2, 44100, 128);
+	var mp3Data = [];
+
+	var left = samples;
+	var right = samples;
+
+	left = new Int16Array(44100); //one second of silence (get your data from the source you have)
+	right = new Int16Array(44100); //one second of silence (get your data from the source you have)
+	sampleBlockSize = 1152; //can be anything but make it a multiple of 576 to make encoders life easier
+
+	for (var i = 0; i < samples.length; i += sampleBlockSize) {
+		leftChunk = left.subarray(i, i + sampleBlockSize);
+		rightChunk = right.subarray(i, i + sampleBlockSize);
+		var mp3buf = mp3encoder.encodeBuffer(leftChunk, rightChunk);
+		if (mp3buf.length > 0) {
+			mp3Data.push(mp3buf);
+		}
+	}
+	var mp3buf = mp3encoder.flush();   //finish writing mp3
+
+	if (mp3buf.length > 0) {
+			mp3Data.push(mp3buf);
+	}
+
+				var formData = new FormData();
+				formData.append(fileType + '-filename', fileName);
+				formData.append(fileType + '-blob', mp3Data);
+				console.log(mp3Data);
+				$.ajax({
+					type: 'POST',
+					url: 'GetSound',
+					data: formData,
+					contentType: false,
+					cache: false,
+					processData: false,
+					success: function(data){
+						console.log(data);
+					},
+					error: function(data){
+						console.log(data);
+					}
+			 });
+				// var bUrl = window.URL.createObjectURL(blob);
+				// console.log('Blob created, URL:', bUrl);
+				// window.myAudioPlayer = document.createElement('audio');
+				// window.myAudioPlayer.src = bUrl;
+				// window.myAudioPlayer.setAttribute('controls', '');
+				// window.myAudioPlayer.play();
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+	"dialog_node": "bienvenue",
+	"conditions": "#bonjour",
+	"output": {
+		"text": "Bonjour, que puis-je faire qui vous obligerez ?"
+	},
+	"title": "Bienvenue"
+}

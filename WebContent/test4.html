@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+
+  <input type="file" accept="audio/*;capture=microphone">
+  <device type="media" onchange="update(this.data)"></device>
+  <video autoplay></video>
+
+  <script>
+    function update(stream) {
+      document.querySelector('video').src = stream.url;
+    }
+
+    function hasGetUserMedia() {
+      return !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia);
+    }
+
+    if (hasGetUserMedia()) {
+      console.log('Good to go!');
+    } else {
+      console.log('getUserMedia() is not supported by your browser');
+    }
+
+    const constraints = {
+      video: true,
+      audio: true
+    };
+
+    const video = document.querySelector('video');
+
+    function handleSuccess(stream) {
+      video.srcObject = stream;
+      console.log(stream);
+    }
+
+    function handleError(error) {
+      console.error('Reeeejected!', error);
+    }
+
+    navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+
+  </script>
+
+</body>
+</html>
